@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "inside",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "box",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 50,
+              "y": 50
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "overflow",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "box",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 105,
+              "y": 50
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rotation-and-mirror",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "parent",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 40,
+              "y": 40
+            },
+            "m_AnchoredPosition": {
+              "x": 50,
+              "y": 50
+            },
+            "m_LocalRotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0.7071067811865476,
+              "w": 0.7071067811865476
+            },
+            "m_LocalScale": {
+              "x": -1,
+              "y": 1,
+              "z": 1
+            }
+          }
+        },
+        {
+          "id": "child",
+          "parent": "parent",
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_AnchorMax": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 10,
+              "y": 10
+            },
+            "m_AnchoredPosition": {
+              "x": 10,
+              "y": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ancestor-clip",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "clip",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 100,
+              "y": 100
+            },
+            "m_AnchoredPosition": {
+              "x": 50,
+              "y": 50
+            }
+          },
+          "clip": true
+        },
+        {
+          "id": "box",
+          "parent": "clip",
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 105,
+              "y": 50
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "runtime-uncertain",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "box",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 105,
+              "y": 50
+            }
+          },
+          "uncertain": [
+            "runtime_layout"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "default-hidden",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "screen_space_overlay",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "box",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 105,
+              "y": 50
+            }
+          },
+          "active": false
+        }
+      ]
+    },
+    {
+      "id": "unsupported-canvas",
+      "viewport": [
+        100,
+        100
+      ],
+      "canvas": {
+        "render_mode": "world_space",
+        "scaler": {
+          "ui_scale_mode": 0,
+          "scale_factor": 1
+        }
+      },
+      "nodes": [
+        {
+          "id": "box",
+          "parent": null,
+          "rect": {
+            "m_AnchorMin": {
+              "x": 0,
+              "y": 0
+            },
+            "m_AnchorMax": {
+              "x": 0,
+              "y": 0
+            },
+            "m_Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_SizeDelta": {
+              "x": 20,
+              "y": 20
+            },
+            "m_AnchoredPosition": {
+              "x": 50,
+              "y": 50
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
