@@ -1,8 +1,18 @@
 # Unity uGUI Layout Probe
 
+[![Linux geometry and demo CI](https://github.com/icekree/unity-ugui-layout-probe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/icekree/unity-ugui-layout-probe/actions/workflows/ci.yml)
+
 Experimental Python geometry helpers for Unity uGUI layouts, with synthetic JSON/PNG demos, explicit unknowns, and a bounded case study.
 
 **Frozen research snapshot · experimental v0.1.1.** For developers who want to inspect an explicitly supplied RectTransform hierarchy, understand static overflow calculations, or reuse a small geometry reference. No game, IPA/APK, Unity installation, or Unity project is required.
+
+Created by [icekree](https://github.com/icekree). Standard layout and clipping formulas are established work; this project contributes its implementation, explicit failure handling, original examples and verification.
+
+| Start here | What you get |
+| --- | --- |
+| [Run the demo](#run-and-inspect) | Seven original scenes, exact measurements and explicit unknowns |
+| [Borrow the geometry](docs/recttransform-overflow-python.md#reuse-only-the-standard-library-geometry) | A runnable standard-library example and hand-derived expectations |
+| [Read the engineering case](docs/case-study.md) | Version, object and ZIP difference checks, with bounded evidence |
 
 Input: [seven original JSON scenes](examples/layouts.json). Output: `summary.json`, numbered PNGs and an overview, generated from rectangles rather than game artwork.
 
@@ -21,6 +31,8 @@ Thin lines show original rectangles; thick lines show ancestor-clipped rectangle
 [Release and demo downloads](https://github.com/icekree/unity-ugui-layout-probe/releases) · [Linux CI](https://github.com/icekree/unity-ugui-layout-probe/actions) · [中文说明](README.zh-CN.md) · [Input and report contract](docs/format.md) · [Bounded engineering case](docs/case-study.md) · [Attribution](THIRD_PARTY.md) · [Release fixes](CHANGELOG.md)
 
 ## Run and inspect
+
+[Calculate Unity RectTransform overflow with Python](docs/recttransform-overflow-python.md) walks through a complete input, the 15-pixel overflow / 0.75 outside-area calculation, clipping and UNKNOWN. For reuse without Pillow, run `uv run --python 3.12 python -m examples.reuse_geometry` from this directory; helper signatures remain experimental.
 
 Use Python 3.12 and [uv](https://docs.astral.sh/uv/). The geometry module uses only the Python standard library; the demo pins `Pillow==12.3.0` and uses its bundled default font.
 
@@ -55,3 +67,9 @@ The Linux CI uses Python 3.12, runs analytical and invalid-input tests, and gene
 Standard matrix, polygon-clipping and Unity layout formulas are not new algorithms. This project's contribution is the small implementation, explicit failure contract, original fixtures, verification and bounded case documentation. See [source and specification attribution](THIRD_PARTY.md). Code and original fixtures are MIT licensed; Pillow retains its own license.
 
 This is a finite portfolio artifact, not a maintained general parsing platform. [Issues](https://github.com/icekree/unity-ugui-layout-probe/issues) are open for small synthetic reproductions, analytical counterexamples, concrete reuse and citations. Do not upload game archives, credentials or private captures. No response or continued-development schedule is promised.
+
+## Credit and citation
+
+If you borrow code, retain the MIT copyright and license notice. Acknowledgment is appreciated, not an additional license condition. GitHub's **Cite this repository** entry uses [CITATION.cff](CITATION.cff) for the frozen v0.1.1 software release; cite your actual tag or commit if using another revision. The tutorial, reuse example and share materials were added later on `main` without changing that release's code or attachments.
+
+Use the [feedback form](https://github.com/icekree/unity-ugui-layout-probe/issues/new?template=feedback.yml) to share a minimal original counterexample, a concrete borrowed function or a public citation. [Prepared English/Chinese sharing copy and portfolio text](docs/share.md) are available for accurate presentation.

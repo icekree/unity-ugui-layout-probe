@@ -2,6 +2,8 @@
 
 这是一个**冻结的研究快照**：用 Python 对明确输入的 Unity uGUI 布局做实验性几何计算，并输出原创 JSON/PNG 演示。陌生开发者无需游戏、IPA/APK、Unity 安装或 Unity 工程即可运行。
 
+作者：[icekree](https://github.com/icekree)。可以从三个入口开始：[运行演示](README.md#run-and-inspect)、[借用标准库几何与手算教程](docs/recttransform-overflow-python.md)、[阅读工程案例](docs/case-study.md)。标准布局与裁剪算法属于已有知识，本项目的贡献是实现、失败处理、原创例子及验证。
+
 ```sh
 uv run --with-requirements requirements.txt python demo.py
 uv run --with-requirements requirements.txt python -m unittest discover -s tests -v
@@ -18,3 +20,7 @@ A/B/C 仅对已计算的越界节点分诊：A 为输入声明可见且没有不
 [英文首页](README.md)、[格式约定](docs/format.md)、[工程案例](docs/case-study.md)和[归属说明](THIRD_PARTY.md)提供完整边界。工程案例中的私有实测只是作者记录，不是公开可复现证据。
 
 目前没有本项目买家、收入或已验证需求的证据。有限整理的价值在于可审查的实现、手算验证、对未知结果的诚实处理，以及具体复用。欢迎提交原创最小复现、反例和引用；不承诺持续开发，不因 Stars 或收入不足追加开发。
+
+标准库复用示例：在仓库根目录运行 `uv run --python 3.12 python -m examples.reuse_geometry`，无需 Pillow，不写文件。它假定输入几何有效，不能替代完整演示的验证及 UNKNOWN 处理，接口不承诺稳定。
+
+[引用元数据](CITATION.cff)对应真实的 v0.1.1 软件发布。使用其他版本请注明实际 tag 或 commit；MIT 复用须保留版权及许可声明，引用不是附加许可条件。本轮教程和展示材料仅更新 main，没有修改原标签与附件。可用[反馈表单](https://github.com/icekree/unity-ugui-layout-probe/issues/new?template=feedback.yml)报告具体复现、复用或引用；[中英文分享文案与作品集介绍](docs/share.md)已准备。

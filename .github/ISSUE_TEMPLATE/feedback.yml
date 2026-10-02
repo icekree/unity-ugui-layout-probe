@@ -1,0 +1,47 @@
+name: Synthetic reproduction, reuse or citation
+description: Share a minimal original counterexample or a concrete use of this frozen reference.
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a frozen experimental snapshot. Feedback is welcome; no response or continued-development schedule is promised.
+        Use only original synthetic JSON. Do not upload game archives, credentials, personal data or private captures. UNKNOWN is not a pass; native Unity parity is unverified.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Feedback type
+      options:
+        - Reproduction or analytical counterexample
+        - Concrete code reuse
+        - Citation
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Version or commit
+      description: Include your exact tag or SHA and Python/Pillow versions where relevant.
+      placeholder: v0.1.1 / 66c20b5; Python 3.12; Pillow 12.3.0
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Minimal original JSON and command
+      description: Required for a reproduction; write N/A for a reuse or citation report. Keep it synthetic and small.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual result
+      description: Provide a hand-derived expectation or exact observed output. For reuse/citation, describe what helped and its limits.
+    validations:
+      required: true
+  - type: textarea
+    id: reuse
+    attributes:
+      label: Concrete reuse or citation
+      description: Optional public link, borrowed function, or citation. Distinguish a planned use from an actual one; no private data.

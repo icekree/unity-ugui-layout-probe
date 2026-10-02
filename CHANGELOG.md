@@ -1,5 +1,9 @@
 # Release fixes
 
+## Presentation update on main — 2026-10-02
+
+Added a worked RectTransform overflow tutorial, a standard-library reuse example, v0.1.1 citation metadata, synthetic feedback form, original social preview and English/Chinese portfolio copy. Geometry, JSON input/report contract, CLI, v0.1.1 tag and release attachments are unchanged. This documentation and presentation update creates no new software release or maintenance commitment.
+
 ## v0.1.1 — final experimental revision
 
 A post-publication review of fixed v0.1.0 commit `6814b63f59e8077cedc0ae1378220cabb479e962` identified three reproducible input/output issues, confirmed locally and covered by regression tests:
