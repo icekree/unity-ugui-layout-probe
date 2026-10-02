@@ -31,7 +31,11 @@ def unknown(identifier, reason):
 
 def analyze_case(case, tolerance=4.):
     """Roots inherit a virtual Canvas with bottom-left origin and pivot (0, 0)."""
+    if not isinstance(case, dict):
+        raise ValueError('case must be an object')
     nodes = case['nodes']
+    if not isinstance(nodes, list) or any(not isinstance(n, dict) for n in nodes):
+        raise ValueError('nodes must be an array of objects')
     ids = [n['id'] for n in nodes]
     if any(not isinstance(i, str) or not i for i in ids) or len(ids) != len(set(ids)):
         raise ValueError('node IDs must be unique nonempty strings')
@@ -166,8 +170,12 @@ def build(input_path, output, tolerance=4.):
         raise ValueError('negative tolerance')
     source = input_path.read_bytes()
     data = json.loads(source)
-    if type(data['schema_version']) is not int or data['schema_version'] != 1 or not isinstance(data['cases'], list):
-        raise ValueError('expected schema_version 1 and cases list')
+    if not isinstance(data, dict):
+        raise ValueError('input must be an object')
+    if type(data['schema_version']) is not int or data['schema_version'] != 1 or not isinstance(data['cases'], list) or not data['cases']:
+        raise ValueError('expected schema_version 1 and a nonempty cases array')
+    if any(not isinstance(c, dict) for c in data['cases']):
+        raise ValueError('cases must contain objects')
     case_ids = [c['id'] for c in data['cases']]
     if any(not isinstance(i, str) or not i for i in case_ids) or len(case_ids) != len(set(case_ids)):
         raise ValueError('case IDs must be unique nonempty strings')
@@ -187,6 +195,17 @@ def build(input_path, output, tolerance=4.):
     output = output.resolve()
     if input_path.resolve().is_relative_to(output):
         raise ValueError('output directory must not contain input file')
+    output = output/report['report_id']
+    if output.is_symlink() or (output.exists() and not output.is_dir()):
+        raise ValueError('report directory must be a directory with no symlink')
+    filenames = ['summary.json'] + [f'{i:02d}.png' for i in range(1, len(report['cases'])+1)]
+    filenames.append('overview.png')
+    if output.exists() and any(p.name not in filenames for p in output.iterdir()):
+        raise ValueError('report directory contains unexpected files')
+    for filename in filenames:
+        target = output/filename
+        if target.is_symlink() or (target.exists() and (not target.is_file() or target.stat().st_nlink != 1)):
+            raise ValueError('output targets must be regular files with no symlinks or hard links')
     output.mkdir(parents=True, exist_ok=True)
     cards = []
     for number, case in enumerate(report['cases'], 1):
@@ -204,6 +223,8 @@ def build(input_path, output, tolerance=4.):
     if not report['input_unchanged']:
         raise RuntimeError('input changed during rendering')
     (output/'summary.json').write_text(json.dumps(report, sort_keys=True, indent=2, allow_nan=False)+'\n')
+    if input_path.read_bytes() != source:
+        raise RuntimeError('input changed during report writing')
     return report
 
 
@@ -214,11 +235,11 @@ def main():
     args = parser.parse_args()
     try:
         report = build(args.input, args.output)
-    except ERRORS + (OSError, json.JSONDecodeError) as error:
+    except ERRORS + (OSError, RuntimeError, json.JSONDecodeError) as error:
         parser.error(str(error))
     print(json.dumps({'report_id': report['report_id'], 'cases': len(report['cases']),
                       'unknown': sum(c['counts']['unknown'] for c in report['cases']),
-                      'output': str(args.output), 'input_unchanged': report['input_unchanged']}))
+                      'output': str(args.output.resolve()/report['report_id']), 'input_unchanged': report['input_unchanged']}))
 
 
 if __name__ == '__main__':

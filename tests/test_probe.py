@@ -2,7 +2,10 @@ import copy
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -158,7 +161,8 @@ class ReportTests(unittest.TestCase):
             outputs=[Path(tmp)/'one',Path(tmp)/'two']
             reports=[demo.build(FIXTURE,out) for out in outputs]
             self.assertEqual(reports[0],reports[1])
-            manifests=[{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir()} for out in outputs]
+            manifests=[{str(p.relative_to(out)):hashlib.sha256(p.read_bytes()).hexdigest()
+                        for p in out.rglob('*') if p.is_file()} for out in outputs]
             self.assertEqual(manifests[0],manifests[1])
             self.assertEqual(len(reports[0]['cases']),7)
             self.assertEqual(sum(c['counts']['total'] for c in reports[0]['cases']),EXPECTED['total_nodes'])
@@ -168,6 +172,68 @@ class ReportTests(unittest.TestCase):
 
     def test_source_directory_is_not_an_output(self):
         with self.assertRaises(ValueError): demo.build(FIXTURE,FIXTURE.parent)
+
+    def test_output_aliases_cannot_modify_input(self):
+        for name in ('summary.json', '01.png'):
+            for kind in ('symlink', 'hardlink'):
+                with self.subTest(name=name,kind=kind), tempfile.TemporaryDirectory() as tmp:
+                    root=Path(tmp); source=root/'input.json'; source.write_bytes(FIXTURE.read_bytes())
+                    before=source.read_bytes(); output=root/'out'; output.mkdir()
+                    report=demo.build(source,output); folder=output/report['report_id']
+                    (folder/name).unlink()
+                    if kind=='symlink': (folder/name).symlink_to(source)
+                    else: os.link(source,folder/name)
+                    files_before={p.name:p.read_bytes() for p in folder.iterdir()}
+                    with self.assertRaisesRegex(ValueError,'output targets'):
+                        demo.build(source,output)
+                    self.assertEqual(source.read_bytes(),before)
+                    self.assertEqual({p.name:p.read_bytes() for p in folder.iterdir()},files_before)
+
+    def test_report_directory_alias_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); first=demo.build(FIXTURE,root/'first')
+            output=root/'second'; output.mkdir()
+            (output/first['report_id']).symlink_to(root/'first'/first['report_id'],target_is_directory=True)
+            with self.assertRaisesRegex(ValueError,'report directory'):
+                demo.build(FIXTURE,output)
+
+    def test_output_reports_do_not_mix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); source=root/'input.json'; source.write_bytes(FIXTURE.read_bytes())
+            output=root/'out'; large=demo.build(source,output)
+            large_folder=output/large['report_id']
+            old_files={p.name:p.read_bytes() for p in large_folder.iterdir()}
+            data=copy.deepcopy(DATA);data['cases']=data['cases'][:1]
+            source.write_text(json.dumps(data));before=source.read_bytes()
+            small=demo.build(source,output);small_folder=output/small['report_id']
+            self.assertNotEqual(large_folder,small_folder)
+            self.assertEqual({p.name for p in small_folder.iterdir()},{'summary.json','01.png','overview.png'})
+            new_files={p.name:p.read_bytes() for p in small_folder.iterdir()}
+            self.assertEqual(demo.build(source,output),small)
+            self.assertEqual({p.name:p.read_bytes() for p in small_folder.iterdir()},new_files)
+            self.assertEqual({p.name:p.read_bytes() for p in large_folder.iterdir()},old_files)
+            self.assertEqual(source.read_bytes(),before)
+
+    def test_structural_types_and_empty_cases_are_rejected(self):
+        payloads=[[],{'schema_version':1,'cases':[]}, {'schema_version':True,'cases':DATA['cases']},
+                  {'schema_version':1,'cases':['invalid']}]
+        for nodes in ({},'',None,['node'],[1]):
+            data=copy.deepcopy(DATA);data['cases'][0]['nodes']=nodes;payloads.append(data)
+        with tempfile.TemporaryDirectory() as tmp:
+            source=Path(tmp)/'input.json';output=Path(tmp)/'out'
+            for data in payloads:
+                source.write_text(json.dumps(data));before=source.read_bytes()
+                with self.assertRaises(ValueError): demo.build(source,output)
+                self.assertEqual(source.read_bytes(),before)
+                self.assertFalse(output.exists())
+            result=subprocess.run([sys.executable,str(demo.ROOT/'demo.py'),'--input',str(source),'--output',str(output)],capture_output=True,text=True)
+            self.assertNotEqual(result.returncode,0)
+            self.assertIn('nodes must be an array of objects',result.stderr)
+            self.assertNotIn('Traceback',result.stderr)
+
+    def test_valid_empty_nodes_remain_valid(self):
+        c=sample();c['nodes']=[]
+        self.assertEqual(demo.analyze_case(c)['counts'],dict(total=0,computed=0,unknown=0,A=0,B=0,C=0))
 
 
 if __name__=='__main__': unittest.main()

@@ -2,19 +2,23 @@
 
 Experimental Python geometry helpers for Unity uGUI layouts, with synthetic JSON/PNG demos, explicit unknowns, and a bounded case study.
 
-**Frozen research snapshot · experimental v0.1.0.** For developers who want to inspect an explicitly supplied RectTransform hierarchy, understand static overflow calculations, or reuse a small geometry reference. No game, IPA/APK, Unity installation, or Unity project is required.
+**Frozen research snapshot · experimental v0.1.1.** For developers who want to inspect an explicitly supplied RectTransform hierarchy, understand static overflow calculations, or reuse a small geometry reference. No game, IPA/APK, Unity installation, or Unity project is required.
 
 Input: [seven original JSON scenes](examples/layouts.json). Output: `summary.json`, numbered PNGs and an overview, generated from rectangles rather than game artwork.
+
+Clone or download this repository and enter its directory first, then run:
 
 ```sh
 uv run --with-requirements requirements.txt python demo.py
 ```
 
-![Original synthetic scenes: inside, overflow, rotation/mirror, clipping, runtime uncertainty, hidden and unsupported Canvas](examples/overview.png)
-
 **Limits:** no systematic comparison against native Unity runtime results has been completed. Determinism does not establish correctness. Static overflow is not a confirmed runtime defect; `UNKNOWN` is not a pass. This is an experimental reference for explicit JSON inputs, not a Unity importer or UI test runner.
 
-[中文说明](README.zh-CN.md) · [Input and report contract](docs/format.md) · [Bounded engineering case](docs/case-study.md) · [Attribution](THIRD_PARTY.md)
+![Original synthetic scenes: inside, overflow, rotation/mirror, clipping, runtime uncertainty, hidden and unsupported Canvas](examples/overview.png)
+
+Thin lines show original rectangles; thick lines show ancestor-clipped rectangles; cyan frames show viewports.
+
+[Release and demo downloads](https://github.com/icekree/unity-ugui-layout-probe/releases) · [Linux CI](https://github.com/icekree/unity-ugui-layout-probe/actions) · [中文说明](README.zh-CN.md) · [Input and report contract](docs/format.md) · [Bounded engineering case](docs/case-study.md) · [Attribution](THIRD_PARTY.md) · [Release fixes](CHANGELOG.md)
 
 ## Run and inspect
 
@@ -25,7 +29,7 @@ uv run --with-requirements requirements.txt python demo.py --input examples/layo
 uv run --with-requirements requirements.txt python -m unittest discover -s tests -v
 ```
 
-Default output is `artifacts/demo/`. Each case has a numbered image; `overview.png` combines them and `summary.json` records hashes, environment, parameters, counts and per-node results. You can also install `requirements.txt` in a Python 3.12 environment and run `python demo.py`.
+Default output is `artifacts/demo/<report_id>/`; the command prints this actual report directory. Each case has a numbered image; `overview.png` combines them and `summary.json` records hashes, environment, parameters, counts and per-node results. Different reports have separate directories, while the same analysis can be repeated in place. Existing symlink or hard-link output files are rejected before writing. You can also install `requirements.txt` in a Python 3.12 environment and run `python demo.py`.
 
 The default fixture has nine nodes: eight computed and one `UNKNOWN`. The overflow example is a 20-pixel-wide box spanning x=95..115 in a 100-pixel-wide viewport: right overflow is 15 pixels and outside area ratio is 0.75. These [hand-derived expectations](examples/expected.json) are checked separately from report generation.
 

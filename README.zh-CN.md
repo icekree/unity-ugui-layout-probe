@@ -7,7 +7,7 @@ uv run --with-requirements requirements.txt python demo.py
 uv run --with-requirements requirements.txt python -m unittest discover -s tests -v
 ```
 
-使用 Python 3.12。默认读取 `examples/layouts.json`，写入 `artifacts/demo/summary.json`、编号 PNG 和总览图；支持 `--input` 和 `--output`。几何核心仅用标准库，演示固定 `Pillow==12.3.0`，使用内置字体。
+先 clone/download 仓库并进入目录，使用 Python 3.12。默认读取 `examples/layouts.json`，写入 `artifacts/demo/<report_id>/` 中的 `summary.json`、编号 PNG 和总览图，终端打印实际目录；支持 `--input` 和 `--output`。不同报告分目录保存，重复同一分析仍保持确定性；写入前拒绝输出文件的符号链接与硬链接。几何核心仅用标准库，演示固定 `Pillow==12.3.0`，使用内置字体。
 
 七种原创场景覆盖边界内、确定越界、旋转与镜像、祖先裁剪、显式运行时不确定、默认隐藏和不支持的 Canvas 模式。默认九个节点中八个成功计算、一个 UNKNOWN。越界场景的手算结果为右侧 15 像素、面积比例 0.75。
 

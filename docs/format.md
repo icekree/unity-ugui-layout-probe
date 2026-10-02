@@ -4,7 +4,7 @@ The public entry point is `demo.py`. This is a JSON geometry experiment, not a s
 
 ## Input
 
-Top-level `schema_version` is integer `1`; `cases` is an array. Case IDs and node IDs are unique nonempty strings within their respective scope. Each case supplies:
+Top-level `schema_version` is integer `1`; `cases` is a nonempty array of objects. Each `nodes` value must be an array of objects; an empty nodes array is valid, but an empty dictionary or string is not. Case IDs and node IDs are unique nonempty strings within their respective scope. Each case supplies:
 
 | Field | Contract |
 | --- | --- |
@@ -40,4 +40,6 @@ Computed nodes include original and ancestor-clipped polygons, `fully_clipped`, 
 
 Unknown nodes include ID, status `UNKNOWN` and reason. Case counts satisfy `total = computed + unknown`. A/B/C counts are subsets of computed overflow; they are not probabilities or defect counts. A computed, entirely ancestor-clipped rectangle has no overflow and `fully_clipped: true`. No geometry is guessed after a parent failure.
 
-Numbered PNGs and `overview.png` draw synthetic rectangles. Coordinates are fit to each panel for illustration; consult JSON for exact pixels. Built-in fonts and pinned Pillow avoid host-font dependencies. JSON/PNG repeatability is tested only within the same environment. Inputs are checked before and after generation, and an output directory containing the input is rejected.
+Numbered PNGs and `overview.png` draw synthetic rectangles. Coordinates are fit to each panel for illustration; consult JSON for exact pixels. Built-in fonts and pinned Pillow avoid host-font dependencies. JSON/PNG repeatability is tested only within the same environment.
+
+Reports go to `<--output directory>/<report_id>/`; the CLI prints that actual directory. Different analysis payloads do not mix their images, and same-input repeats reuse their own directory. Unexpected files in an existing report directory are rejected without deleting them. Inputs are checked before and after generation, including after report writing. An output base directory containing the input is rejected. Report directories cannot be symlinks; existing output targets must be regular files with a single link. Symlinks and hard links are rejected before any reports are written. These checks protect ordinary local execution, not concurrent file replacement by another process.
